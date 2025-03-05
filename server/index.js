@@ -13,10 +13,10 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 // Config
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-for-dev-only';
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/loadtest';
-const WEATHER_API_KEY = process.env.WEATHER_API_KEY || 'demo-key';
+const PORT = 3000;
+const JWT_SECRET = 'your-secret-key-for-dev-only';
+const MONGO_URI = 'mongodb+srv://joelapeter82:KGic5bfvxhkBN97h@cluster.d9gti.mongodb.net/?retryWrites=true&w=majority&appName=Cluster';
+const WEATHER_API_KEY = 'demo-key';
 
 // Set up file upload storage
 const storage = multer.diskStorage({
