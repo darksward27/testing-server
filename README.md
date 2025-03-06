@@ -1,158 +1,105 @@
-# Realistic Server Load Testing Suite
+# Node.js Load Testing Server
 
-This project provides a realistic Node.js server with multiple API endpoints and comprehensive load testing tools to evaluate how much traffic your machine can handle.
+This project provides a Node.js server with built-in load testing capabilities. The server includes various API endpoints that simulate different types of workloads and response patterns commonly found in real-world applications.
 
-## Project Structure
+## Server Features
 
-- `server/index.js` - A realistic Express.js server with various endpoints that simulate real-world scenarios:
-  - Authentication with JWT
-  - Database operations (simulated)
-  - File uploads
-  - External API calls
-  - Complex business logic
-  - CPU and memory-intensive operations
-- `load-test.js` - Script to test different server endpoints with varying levels of load
-- `stress-test.js` - Advanced script to find the maximum capacity of concurrent users your server can handle
+- **Basic API endpoints** (health check, products, etc.)
+- **Authentication** with JWT tokens
+- **Database operations** (simulated)
+- **CPU-intensive operations**
+- **Memory-intensive operations**
+- **External API calls** (simulated)
+- **File upload capabilities**
+- **Complex business logic** (checkout process)
 
-## Features
+## Load Testing Tools
 
-- **Authentication**: JWT-based token authentication
-- **Caching**: In-memory data caching
-- **File Operations**: Upload and process files
-- **API Integration**: Simulated external API calls
-- **Database Interactions**: Simulated MongoDB operations
-- **Business Logic**: Order processing and checkout flow
-- **Security**: Helmet protection and rate limiting
-- **Performance**: Compression middleware
-- **Monitoring**: Request logging with Morgan
+The project includes a simplified load testing script that focuses on three key features:
 
-## Setup
+1. **Sending Requests** - Tests all endpoints with configurable concurrency
+2. **Verifying Responses** - Validates all responses automatically
+3. **Controlling Load** - Allows adjusting users per second via command line
 
-1. Install dependencies:
+## Performance Findings
+
+Based on our load testing, we've found the following performance characteristics:
+
+| Endpoint | Throughput | Avg. Latency | Max Connections | Error Rate |
+|----------|------------|--------------|----------------|------------|
+| Health Check | ~1,165,000 req/sec | 7.5ms | 10 | 0% |
+| Products List | ~476,000 req/sec | 21.19ms | 20 | 0% |
+| Single Product | Limited | High | 30 | High |
+| Authentication | Moderate | Varies | 50 | Low |
+| User Profile | Moderate | Varies | 50 | Low |
+
+### Key Observations
+
+1. The server performs very well with simple endpoints like health checks
+2. Cached data endpoints (like Products List) also perform well
+3. Endpoints requiring complex logic or database operations show significantly lower throughput
+4. High concurrency levels can trigger timeouts, especially for resource-intensive endpoints
+5. The server may struggle with handling too many concurrent memory or CPU-intensive operations
+
+## Running the Tests
+
+### Prerequisites
+
+- Node.js 14+ installed
+- NPM or Yarn package manager
+
+### Installation
 
 ```bash
+# Install dependencies
 npm install
 ```
 
-2. Start the server:
+### Starting the Server
 
 ```bash
+# Start the server
 npm start
 ```
 
-For development with auto-restart:
+### Running Tests
 
 ```bash
-npm run dev
-```
+# Run basic health check to verify server is running
+npm run check
 
-The server will start on port 3000 by default. You can change this by setting the `PORT` environment variable.
-
-## Server Endpoints
-
-The server provides several realistic endpoints:
-
-### Public Endpoints
-
-- `GET /health` - Basic health check
-- `POST /api/login` - User authentication
-- `GET /api/products` - List all products (cached)
-- `GET /api/products/:id` - Get a single product
-- `GET /api/weather/:city` - Simulated weather API call
-
-### Protected Endpoints (Require Authentication)
-
-- `GET /api/profile` - Get authenticated user profile
-- `POST /api/upload` - File upload endpoint
-- `POST /api/checkout` - Process an order checkout
-
-### Performance Testing Endpoints
-
-- `GET /api/db-intensive` - Simulated database operations
-- `GET /api/cpu-intensive` - CPU-intensive operations
-- `GET /api/memory-intensive` - Memory-intensive operations
-
-## Running Load Tests
-
-While the server is running in one terminal, open another terminal and run:
-
-```bash
+# Run load test against all endpoints with default concurrency
 npm test
+
+# Run load test with custom number of concurrent users (500)
+npm run test:connections
 ```
 
-This will test all endpoints with different connection levels and output the results, including:
-- Request throughput (req/sec)
-- Latency (avg, min, max, p95)
-- Error rates
-- Status code distribution
-
-Results will be saved to the `results` directory as JSON files for later analysis.
-
-## Running Stress Tests
-
-To determine the maximum number of concurrent users your server can handle:
+To customize the number of concurrent users:
 
 ```bash
-npm run stress
+# Run with any number of connections (users per second)
+node simple-verify-load-test.js --connections=1000
 ```
 
-The stress test will:
-1. Test each endpoint separately with progressively increasing load
-2. Identify degradation points for each endpoint
-3. Determine the overall system bottleneck
-4. Provide optimization recommendations based on the results
-5. Save detailed reports in the `results` directory
+## Optimizing Server Performance
 
-## Understanding Test Results
+Based on our testing, here are recommendations for optimizing the server:
 
-The test results include several key metrics:
+1. **Implement caching** for frequently accessed data
+2. **Limit concurrent CPU-intensive operations**
+3. **Set appropriate timeouts** for different types of operations
+4. **Monitor memory usage** carefully, especially for memory-intensive operations
+5. **Implement horizontal scaling** for high-traffic scenarios
+6. **Use rate limiting judiciously** to prevent abuse while allowing legitimate traffic
 
-- **Throughput** - Requests per second the server can handle
-- **Latency** - Response time metrics (avg, p95, min, max)
-- **Error Rate** - Percentage of requests that failed
-- **Connections** - Number of concurrent connections
-- **Degradation Point** - Where performance significantly declines
-- **Optimal Connection Level** - Best balance of throughput vs latency
+## Troubleshooting Common Issues
 
-## Performance Optimization
+- **Timeouts**: Reduce the number of concurrent connections or increase the server's timeout settings
+- **Memory errors**: Limit memory-intensive operations and monitor server memory usage
+- **High latency**: Check for blocking operations in the request handler and consider using async patterns
+- **Rate limiting errors**: Adjust rate limiting settings or distribute requests over a longer time period
 
-Based on test results, you might consider:
+## License
 
-1. **CPU-bound bottlenecks**: 
-   - Add more CPU cores
-   - Optimize algorithms
-   - Use worker threads for CPU-intensive tasks
-
-2. **Memory-bound bottlenecks**:
-   - Increase available memory
-   - Improve garbage collection
-   - Reduce memory footprint
-
-3. **I/O-bound bottlenecks**:
-   - Implement caching
-   - Use connection pooling
-   - Optimize database queries
-
-4. **Network-bound bottlenecks**:
-   - Compress responses
-   - Reduce payload sizes
-   - Use HTTP/2 or HTTP/3
-
-5. **Scaling strategies**:
-   - Horizontal scaling with load balancing
-   - Vertical scaling for specific bottlenecks
-   - Microservices architecture
-
-## Customizing Tests
-
-You can modify the test parameters:
-
-- In `load-test.js`: Adjust the test configuration for each endpoint
-- In `stress-test.js`: Modify connection levels and thresholds for degradation detection
-
-## Environment Variables
-
-- `PORT` - Server port (default: 3000)
-- `JWT_SECRET` - Secret for JWT token signing (default: development key)
-- `MONGO_URI` - MongoDB connection string (default: localhost)
-- `WEATHER_API_KEY` - API key for real weather API integration (optional) 
+ISC 
