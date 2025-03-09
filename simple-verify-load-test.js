@@ -68,8 +68,6 @@ async function runAllTests() {
         console.log('Skipping this test and moving to the next one.\n');
         results.push({
           name: test.name,
-          path: test.path,
-          method: test.method,
           skipped: true,
           reason: 'validation_failed',
           error: validationResult.error
@@ -82,19 +80,11 @@ async function runAllTests() {
       if (!result.skipped) {
         results.push({
           name: test.name,
-          path: test.path,
-          method: test.method,
-          result,
-          skipped: false
+          ...result
         });
-        
-        // Print individual test results
-        printResults(result);
       } else {
         results.push({
           name: test.name,
-          path: test.path,
-          method: test.method,
           skipped: true,
           reason: result.reason
         });
@@ -103,11 +93,7 @@ async function runAllTests() {
       console.error(`❌ Error running test ${test.name}:`, error.message);
       results.push({
         name: test.name,
-        path: test.path,
-        method: test.method,
-        error: error.message,
-        skipped: true,
-        reason: 'error'
+        error: error.message
       });
     }
   }
@@ -116,7 +102,8 @@ async function runAllTests() {
   const endTime = new Date();
   const totalDuration = (endTime - startTime) / 1000;
 
-  // Save results and print summary
+  // Print and save results
+  printResults(results);
   saveResults(results, startTime);
   printSummary(results, totalDuration);
 }

@@ -5,8 +5,8 @@
 const config = {
   // Default test configuration
   defaultConfig: {
-    url: 'http://localhost:3000',
-    connections: 1000,      // Number of concurrent connections
+    url: 'http://192.168.0.111:30080',
+    connections: 5000,      // Number of concurrent connections
     duration: 10,          // Duration of the test in seconds
     pipelining: 1,         // Number of requests to pipeline
     timeout: 10,           // Increased timeout for each request in seconds

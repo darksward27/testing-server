@@ -7,6 +7,8 @@
     "check": "node server-check.js",
     "test": "node simple-verify-load-test.js",
     "test:connections": "node simple-verify-load-test.js --connections=500",
+    "capacity": "node capacity-test.js",
+    "capacity:k8s": "run-capacity-test.bat",
     "dev": "nodemon server/index.js"
   },
   "keywords": [

@@ -9,13 +9,13 @@ spec:
   # - ClusterIP: Exposes the service on an internal IP in the cluster (default)
   # - NodePort: Exposes the service on each Node's IP at a static port
   # - LoadBalancer: Exposes the service externally using a cloud provider's load balancer
-  type: ClusterIP
+  type: NodePort
   ports:
   - port: 80
     targetPort: 3000
     protocol: TCP
     name: http
-    # If using NodePort, you can specify a nodePort between 30000-32767
-    # nodePort: 30080
+    # Using port 30080 for consistent remote access
+    nodePort: 30080
   selector:
     app: nodejs-load-test-server 

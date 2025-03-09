@@ -16,7 +16,7 @@ const tests = [
     method: 'GET',
     ...config.defaultConfig,
     // Health checks can handle more concurrent users
-    connections: 1000,
+    connections: 5000,
   },
   {
     name: 'Login (Authentication)',
@@ -52,7 +52,7 @@ const tests = [
     method: 'GET',
     ...config.defaultConfig,
     // Cached data can handle more concurrent users
-    connections: 150,
+    connections: 5000,
   },
   {
     name: 'Get Single Product',
@@ -73,7 +73,7 @@ const tests = [
     path: '/api/db-intensive?queries=20',
     method: 'GET',
     ...config.defaultConfig,
-    connections: 50, // Lower connections for DB intensive operations
+    connections: 10, // Lower connections for DB intensive operations
   },
   {
     name: 'CPU Intensive (Medium Workload)',
@@ -89,7 +89,7 @@ const tests = [
     method: 'GET',
     ...config.defaultConfig,
     // Fewer connections for memory-intensive tasks
-    connections: 50,
+    connections: 5000,
   },
   {
     name: 'Memory Intensive (Large)',
@@ -97,7 +97,7 @@ const tests = [
     method: 'GET',
     ...config.defaultConfig,
     // Much fewer connections for large memory usage
-    connections: 20,
+    connections: 200,
   },
   {
     name: 'User Profile (Authenticated)',
@@ -139,7 +139,7 @@ const tests = [
     }),
     ...config.defaultConfig,
     // Complex logic needs fewer connections
-    connections: 30,
+    connections: 5000,
     // Skip if no auth token is available
     skipIf: () => !authToken,
   }
